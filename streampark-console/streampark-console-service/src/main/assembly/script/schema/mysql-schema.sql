@@ -305,7 +305,7 @@ create table `t_variable` (
   `create_time` datetime not null default current_timestamp comment 'create time',
   `modify_time` datetime not null default current_timestamp on update current_timestamp comment 'modify time',
   primary key (`id`) using btree,
-  unique key `un_team_vcode_inx` (`team_id`,`variable_code`) using btree
+  unique key `un_team_variable_code_variable_value_inx` (`team_id`,`variable_code`, `variable_value`) using btree
 ) engine=innodb auto_increment=100000 default charset=utf8mb4 collate=utf8mb4_general_ci;
 
 -- ----------------------------

@@ -187,27 +187,28 @@ public class VariableServiceImpl extends ServiceImpl<VariableMapper, Variable>
    */
   @Override
   public String replaceVariable(Long teamId, String mixed) {
-    if (StringUtils.isEmpty(mixed)) {
+    if (StringUtils.isBlank(mixed)) {
       return mixed;
     }
-    List<Variable> variables = findByTeamId(teamId);
+    List<Variable> variables = baseMapper.listCodeAndValueByTeamId(teamId);
     if (CollectionUtils.isEmpty(variables)) {
       return mixed;
     }
     Map<String, String> variableMap =
         variables.stream()
             .collect(Collectors.toMap(Variable::getVariableCode, Variable::getVariableValue));
-    String restore = mixed;
+    StringBuilder restore = new StringBuilder(mixed);
     Matcher matcher = PLACEHOLDER_PATTERN.matcher(restore);
     while (matcher.find()) {
       String placeholder = matcher.group();
       String variableCode = getCodeFromPlaceholder(placeholder);
       String variableValue = variableMap.get(variableCode);
       if (StringUtils.isNotEmpty(variableValue)) {
-        restore = restore.replace(placeholder, variableValue);
+        int startIndex = restore.indexOf(placeholder);
+        restore.replace(startIndex, startIndex + placeholder.length(), variableValue);
       }
     }
-    return restore;
+    return restore.toString();
   }
 
   private boolean isDependByApplications(Variable variable) {

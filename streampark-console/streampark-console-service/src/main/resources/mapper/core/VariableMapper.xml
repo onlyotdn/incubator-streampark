@@ -66,4 +66,12 @@
         </where>
     </select>
 
+    <select id="listCodeAndValueByTeamId" resultType="org.apache.streampark.console.core.entity.Variable">
+        select variable_code, variable_value
+        from t_variable
+        <where>
+            team_id = #{teamId}
+        </where>
+    </select>
+
 </mapper>
